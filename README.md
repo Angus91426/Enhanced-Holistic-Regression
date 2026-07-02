@@ -122,4 +122,4 @@ If you use this code, please cite:
 
 The method builds on:
 
-> Bertsimas, D. and Li, M. L. (2020). *Scalable holistic linear regression.* Operations Research Letters.
+> Bertsimas, D., & Li, M. L. 2020. “Scalable Holistic Linear Regression.” Operations Research Letters 48 (3): 203-208. https://doi.org/10.1016/j.orl.2020.02.008
