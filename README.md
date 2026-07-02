@@ -23,7 +23,7 @@ At 10,000 predictors the enhanced procedure holds detection accuracy at 100% whi
 ├── Simulation.py                     # Experiment drivers used in the manuscript
 ├── main.py                           # Entry point / configuration for reproducing experiments
 ├── Data/                             # Real-world datasets (_Raw and _Processed CSVs)
-└── Results/                          # Output directory (created automatically)
+└── Results/                          # Output directory (will be created automatically after running the simulation)
 ```
 
 ### `Enhanced_Holistic_Regression.py`
