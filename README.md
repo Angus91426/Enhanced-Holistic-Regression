@@ -1,0 +1,125 @@
+# Enhanced Holistic Regression
+
+Reference implementation and experiments for the paper **"Enhanced Holistic Regression for Multicollinearity Detection and Feature Selection"** (Chih-Hua Hsu and Ting-Yu Liao, Department of Industrial and Systems Engineering, Chung Yuan Christian University).
+
+Enhanced Holistic Regression (EHR) is a framework for detecting multicollinear relationships in high-dimensional linear regression. It builds on the mixed-integer quadratic optimization of Bertsimas and Li (2020) but differs in formulation, scalability, and theoretical grounding. EHR adds a correlation-based screen and a parameter-free eigenvector screen, recasts the minimum-support program with a Special Ordered Set (SOS-1) constraint and a closed-form verification step, and introduces an irreducibility test and a residual-guided fast-path completion. Together these reduce false positives and allow detection to scale from 1,000 to 10,000 predictors.
+
+## Method overview
+
+Given a normalized design matrix `X`, EHR searches for minimal groups of columns that are (near-)linearly dependent. The pipeline has four stages:
+
+1. **Dimensionality-reduction screen** — narrows the search to features likely to be involved in a multicollinear relationship, using either a correlation screen (`Corr_Dimensionality_Reduction`, z-score threshold on each column's strongest off-diagonal correlation) or a parameter-free eigenvector screen (`Eigvec_Dimensionality_Reduction`, features that load significantly on small-eigenvalue eigenvectors).
+2. **Minimum-support detection** — a mixed-integer program (`Minimum_Support`) finds the smallest set of columns spanned by the small-eigenvalue subspace, using an SOS-1 constraint to link the binary support to the coefficient vector. The original Bertsimas big-M formulation is retained as `Bertsimas_Minimum_Support` for comparison.
+3. **Verification** — each candidate support is confirmed by a closed-form *inequality inspection* (smallest singular value below a norm threshold) and an *irreducibility inspection* (no proper subset is already collinear).
+4. **Fast-path completion** — when a candidate fails the inequality check, a residual-guided greedy step (`_fast_path`) attempts to recover a genuine relationship instead of discarding it.
+
+At 10,000 predictors the enhanced procedure holds detection accuracy at 100% while cutting the false-positive rate from about 33% to 9% and runtime from roughly 6,000 seconds to under 200 seconds.
+
+## Repository structure
+
+```
+.
+├── Enhanced_Holistic_Regression.py   # Core methodology (the Multicollinear class + data generation)
+├── Simulation.py                     # Experiment drivers used in the manuscript
+├── main.py                           # Entry point / configuration for reproducing experiments
+├── Data/                             # Real-world datasets (_Raw and _Processed CSVs)
+└── Results/                          # Output directory (created automatically)
+```
+
+### `Enhanced_Holistic_Regression.py`
+
+Core implementation. Key components:
+
+- `Simulation_Data(...)` — generates synthetic design matrices with planted multicollinear relationships of sizes 2, 3, 4, 8, 10, 15, and 20 features.
+- `Data_Preprocessing(...)`, `Normalize(...)`, `Drop_Perfect(...)` — helpers for preparing real-world data (one-hot encoding, column normalization, removal of perfectly collinear columns).
+- `Multicollinear` — the main class. It bundles the two screens, the minimum-support solvers (`Minimum_Support`, `Bertsimas_Minimum_Support`), the verification steps (`Inspection`, `_inequality_inspection`, `_irreducibility_inspection`), the fast-path (`_fast_path`), and the top-level detectors `Enhanced_Detection` / `Ablation_Detection` and `Bertsimas_Detection`. Scoring utilities `Multicollinear_score` and `Reduction_score` report accuracy and false-positive rate.
+
+### `Simulation.py`
+
+Experiment drivers that call the core methods and write results:
+
+- `run_detection_simulation(...)` — synthetic ablation study. Runs Methods A–E, Enhanced (Corr and Eigen variants), and the Bertsimas/Original baseline on generated datasets, then runs paired Wilcoxon / t-tests. The seven configurations isolate one component at a time (screen, inequality inspection, irreducibility, fast-path).
+- `run_reduction_simulation(...)` — compares the eigenvector screen against the correlation screen at several z thresholds.
+- `run_realworld_detection(...)` — runs Enhanced and/or Bertsimas detection on the pre-processed real-world datasets.
+
+### `main.py`
+
+Configuration and entry point. Set `BASE_DIR` for output, choose which experiments to run via the `RUN_*` flags, and select data scales. The two scales follow Table 2 of the manuscript:
+
+| Scale | n      | p      | Relationship counts (MR2..MR20) |
+|-------|--------|--------|---------------------------------|
+| small | 2,000  | 1,000  | `[0, 5, 3, 1, 1, 0, 0]`         |
+| large | 20,000 | 10,000 | `[0, 3, 3, 1, 1, 1, 1]`         |
+
+The `MR` list is ordered `[MR2, MR3, MR4, MR8, MR10, MR15, MR20]`, where `MRk` is the number of planted relationships involving `k` features.
+
+### `Data/`
+
+Real-world datasets used in `run_realworld_detection`. Each dataset is stored as a `_Raw.csv` (original) and a `_Processed.csv` (cleaned, ready for detection) pair. Detection reads the `_Processed.csv` files.
+
+| Dataset (base name)                        | Source | Features | Rows   |
+|--------------------------------------------|--------|----------|--------|
+| Electrical Grid Stability Simulated Data   | UCI    | 12       | 10,000 |
+| Energy Efficiency                          | UCI    | 8        | 768    |
+| Image Segmentation                         | UCI    | 19       | 210    |
+| Statlog (Image Segmentation)               | UCI    | 19       | 2,310  |
+| Vertebral Column                           | UCI    | 6        | 310    |
+| mtp_Ver1                                   | OpenML | 202      | 4,450  |
+
+## Requirements
+
+- Python 3.11+
+- [Gurobi](https://www.gurobi.com/) with `gurobipy` and a valid license (required for the mixed-integer optimization; free academic licenses are available)
+- `numpy`, `pandas`, `scipy`, `openpyxl`, `rich`
+
+```bash
+pip install numpy pandas scipy openpyxl rich gurobipy
+```
+
+## Usage
+
+Configure and run the experiments from `main.py`:
+
+```bash
+python main.py
+```
+
+Open `main.py` and set the flags for the experiments you want:
+
+- `RUN_SCALES` — which data scales (`'small'`, `'large'`) to run.
+- `RUN_DETECTION` — synthetic ablation study plus significance tests.
+- `RUN_REDUCTION` — eigenvector vs. correlation screen comparison.
+- `RUN_REALWORLD` — detection on the datasets in `Data/`.
+- `RUN_COEF_SWEEP` — Enhanced Corr vs. Enhanced Eigvec across minimum-coefficient levels 0.0–1.0.
+
+Shared settings such as `NOISE_SCALE`, `SIMULATIONS`, and `SEED` are also defined at the top of `main.py`. Results are written under `Results/` (created automatically), organized into `Detection/`, `Reduction/`, and `RealWorld/` subfolders with performance tables (`Performance.xlsx`), detected/ground-truth workbooks, and, when enabled, per-simulation trace CSVs.
+
+### Using the detector directly
+
+```python
+import numpy as np
+import Enhanced_Holistic_Regression as EHR
+
+# Synthetic example: 2000 x 1000 design with planted relationships
+indices, coef, X, feature_col = EHR.Simulation_Data(
+    n=2000, p=1000, MR=[0, 5, 3, 1, 1, 0, 0], noise_scale=0.01, rand_seed=911122
+)
+
+detector = EHR.Multicollinear(
+    reduction=True, reduction_method='eigvec',
+    Inequality_Inspection=True, Irreducibility_Inspection=True, fastpath=True
+)
+relationships = detector.Enhanced_Detection(X=X, col_names=feature_col)
+acc, fpr = detector.Multicollinear_score(relationships, indices)
+print(f'Accuracy: {acc:.1f}%, False-positive rate: {fpr:.1f}%')
+```
+
+## Citation
+
+If you use this code, please cite:
+
+> Chih-Hua Hsu and Ting-Yu Liao. *Enhanced Holistic Regression for Multicollinearity Detection and Feature Selection.*
+
+The method builds on:
+
+> Bertsimas, D. and Li, M. L. (2020). *Scalable holistic linear regression.* Operations Research Letters.
