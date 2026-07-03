@@ -69,14 +69,14 @@ The `MR` list is ordered `[MR2, MR3, MR4, MR8, MR10, MR15, MR20]`, where `MRk` i
 
 Real-world datasets used in `run_realworld_detection`. Each dataset is stored as a `_Raw.csv` (original) and a `_Processed.csv` (cleaned, ready for detection) pair. Detection reads the `_Processed.csv` files.
 
-| Dataset (base name)                        | Source | Features | Rows   |
-|--------------------------------------------|--------|----------|--------|
-| Electrical Grid Stability Simulated Data   | UCI    | 12       | 10,000 |
-| Energy Efficiency                          | UCI    | 8        | 768    |
-| Image Segmentation                         | UCI    | 19       | 210    |
-| Statlog (Image Segmentation)               | UCI    | 19       | 2,310  |
-| Vertebral Column                           | UCI    | 6        | 310    |
-| mtp_Ver1                                   | OpenML | 202      | 4,450  |
+| Dataset (base name)                        | Source | Sample size | Raw Features | Processed Features  |
+|--------------------------------------------|--------|-------------|--------------|---------------------|
+| mtp_Ver1                                   | OpenML | 4,450       | 202          | 194                 |
+| Image Segmentation                         | UCI    | 210         | 19           | 18                  |
+| Statlog (Image Segmentation)               | UCI    | 2,310       | 19           | 18                  |
+| Vertebral Column                           | UCI    | 310         | 6            | 6                   |
+| Energy Efficiency                          | UCI    | 768         | 8            | 8                   |
+| Electrical Grid Stability Simulated Data   | UCI    | 10,000      | 12           | 12                  |
 
 ## Requirements
 
