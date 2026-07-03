@@ -45,14 +45,14 @@ Experiment drivers that call the core methods and write results:
 #### Ablation Study
 
 | Method     | Screen  | Inequality Inspection | Irreducibility Inspection | Fast-path recovery |
-|------------|---------|:----------:|:---------------:|:-------------------:|
-| A          | Corr    | –          | –                | –                    |
-| B          | Eigvec  | –          | –                | –                    |
-| C          | –       | ✓          | –                | –                    |
-| D          | –       | ✓          | ✓                | –                    |
-| E          | Corr    | ✓          | ✓                | –                    |
-| En-Corr    | Corr    | ✓          | ✓                | ✓                    |
-| En-Eigvec  | Eigvec  | ✓          | ✓                | ✓                    |
+|------------|---------|:---------------------:|:-------------------------:|:-------------------:|
+| A          | Corr    | –                     | –                         | –                   |
+| B          | Eigvec  | –                     | –                         | –                   |
+| C          | –       | ✓                     | –                         | –                   |
+| D          | –       | ✓                     | ✓                         | –                   |
+| E          | Corr    | ✓                     | ✓                         | –                   |
+| En-Corr    | Corr    | ✓                     | ✓                         | ✓                   |
+| En-Eigvec  | Eigvec  | ✓                     | ✓                         | ✓                   |
 
 *Inequality and Irreducibility columns fall under the "Inspection" step of the pipeline.*
 
