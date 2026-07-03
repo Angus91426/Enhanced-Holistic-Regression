@@ -2,7 +2,7 @@
 
 Reference implementation and experiments for the paper **"Enhanced Holistic Regression for Multicollinearity Detection and Feature Selection"** (Chih-Hua Hsu and Ting-Yu Liao, Department of Industrial and Systems Engineering, Chung Yuan Christian University).
 
-Enhanced Holistic Regression (EHR) is a framework for detecting multicollinear relationships in high-dimensional linear regression. It builds on the mixed-integer quadratic optimization of Bertsimas and Li (2020) but differs in formulation, scalability, and theoretical grounding. EHR adds a correlation-based screen and a parameter-free eigenvector screen, recasts the minimum-support program with a Special Ordered Set (SOS-1) constraint and a closed-form verification step, and introduces an irreducibility test and a residual-guided fast-path completion. Together these reduce false positives and allow detection to scale from 1,000 to 10,000 predictors.
+Enhanced Holistic Regression (EHR) is a framework for detecting multicollinear relationships in high-dimensional linear regression. It builds on the mixed-integer quadratic optimization of Bertsimas and Li (2020) but differs in formulation, scalability, and theoretical grounding. EHR adds a correlation-based screen and a parameter-free eigenvector screen, recasts the minimum-support program with a Special Ordered Set (SOS-1) constraint and a closed-form verification step, and introduces an irreducibility test and a residual-guided fast-path completion. Together, these reduce false positives and allow detection to scale from 1,000 to 10,000 predictors.
 
 ## Method overview
 
@@ -10,10 +10,10 @@ Given a normalized design matrix `X`, EHR searches for minimal groups of columns
 
 1. **Dimensionality-reduction screen** — narrows the search to features likely to be involved in a multicollinear relationship, using either a correlation screen (`Corr_Dimensionality_Reduction`, z-score threshold on each column's strongest off-diagonal correlation) or a parameter-free eigenvector screen (`Eigvec_Dimensionality_Reduction`, features that load significantly on small-eigenvalue eigenvectors).
 2. **Minimum-support detection** — a mixed-integer program (`Minimum_Support`) finds the smallest set of columns spanned by the small-eigenvalue subspace, using an SOS-1 constraint to link the binary support to the coefficient vector. The original Bertsimas big-M formulation is retained as `Bertsimas_Minimum_Support` for comparison.
-3. **Verification** — each candidate support is confirmed by a closed-form *inequality inspection* (smallest singular value below a norm threshold) and an *irreducibility inspection* (no proper subset is already collinear).
+3. **Verification** — each candidate support is confirmed by a closed-form *inequality inspection* (smallest eigenvalue below a norm threshold) and an *irreducibility inspection* (no proper subset is already collinear).
 4. **Fast-path completion** — when a candidate fails the inequality check, a residual-guided greedy step (`_fast_path`) attempts to recover a genuine relationship instead of discarding it.
 
-At 10,000 predictors the enhanced procedure holds detection accuracy at 100% while cutting the false-positive rate from about 33% to 9% and runtime from roughly 6,000 seconds to under 200 seconds.
+At 10,000 predictors, the enhanced procedure maintains 100% detection accuracy while reducing the false-positive rate from about 33% to 9% and runtime from roughly 6,000 seconds to under 200 seconds.
 
 ## Repository structure
 
@@ -32,7 +32,7 @@ Core implementation. Key components:
 
 - `Simulation_Data(...)` — generates synthetic design matrices with planted multicollinear relationships of sizes 2, 3, 4, 8, 10, 15, and 20 features.
 - `Data_Preprocessing(...)`, `Normalize(...)`, `Drop_Perfect(...)` — helpers for preparing real-world data (one-hot encoding, column normalization, removal of perfectly collinear columns).
-- `Multicollinear` — the main class. It bundles the two screens, the minimum-support solvers (`Minimum_Support`, `Bertsimas_Minimum_Support`), the verification steps (`Inspection`, `_inequality_inspection`, `_irreducibility_inspection`), the fast-path (`_fast_path`), and the top-level detectors `Enhanced_Detection` / `Ablation_Detection` and `Bertsimas_Detection`. Scoring utilities `Multicollinear_score` and `Reduction_score` report accuracy and false-positive rate.
+- `Multicollinear` — the main class. It bundles the two screens, the minimum-support solvers (`Minimum_Support`, `Bertsimas_Minimum_Support`), the verification steps (`Inspection`, `_inequality_inspection`, `_irreducibility_inspection`), the fast-path (`_fast_path`), and the top-level detectors `Enhanced_Detection` / `Ablation_Detection` and `Bertsimas_Detection`. The scoring utilities `Multicollinear_score` and `Reduction_score` report the accuracy and false-positive rate.
 
 ### `Simulation.py`
 
