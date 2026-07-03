@@ -42,6 +42,21 @@ Experiment drivers that call the core methods and write results:
 - `run_reduction_simulation(...)` — compares the eigenvector screen against the correlation screen at several z thresholds.
 - `run_realworld_detection(...)` — runs Enhanced and/or Bertsimas detection on the pre-processed real-world datasets.
 
+#### Ablation Study
+
+| Method     | Screen  | Inequality | Irreducibility | Fast-path recovery |
+|------------|---------|:----------:|:---------------:|:-------------------:|
+| A          | Corr    | –          | –                | –                    |
+| B          | Eigvec  | –          | –                | –                    |
+| C          | –       | ✓          | –                | –                    |
+| D          | –       | ✓          | ✓                | –                    |
+| E          | Corr    | ✓          | ✓                | –                    |
+| En-Corr    | Corr    | ✓          | ✓                | ✓                    |
+| En-Eigvec  | Eigvec  | ✓          | ✓                | ✓                    |
+
+*Inequality and Irreducibility columns fall under the "Inspection" step of the pipeline.*
+
+
 ### `main.py`
 
 Configuration and entry point. Set `BASE_DIR` for output, choose which experiments to run via the `RUN_*` flags, and select data scales. The two scales follow Table 2 of the manuscript:
