@@ -44,7 +44,7 @@ Experiment drivers that call the core methods and write results:
 
 #### Ablation Study
 
-| Method     | Screen  | Inequality | Irreducibility | Fast-path recovery |
+| Method     | Screen  | Inequality Inspection | Irreducibility Inspection | Fast-path recovery |
 |------------|---------|:----------:|:---------------:|:-------------------:|
 | A          | Corr    | –          | –                | –                    |
 | B          | Eigvec  | –          | –                | –                    |
