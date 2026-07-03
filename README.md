@@ -54,9 +54,6 @@ Experiment drivers that call the core methods and write results:
 | En-Corr    | Corr    | ✓                     | ✓                         | ✓                   |
 | En-Eigvec  | Eigvec  | ✓                     | ✓                         | ✓                   |
 
-*Inequality and Irreducibility columns fall under the "Inspection" step of the pipeline.*
-
-
 ### `main.py`
 
 Configuration and entry point. Set `BASE_DIR` for output, choose which experiments to run via the `RUN_*` flags, and select data scales. The two scales follow Table 2 of the manuscript:
