@@ -55,12 +55,12 @@ SAVE_TRACE  = False   # detection: also write a per-method/simulation trace CSV
 
 if __name__ == '__main__':
     os.makedirs( BASE_DIR, exist_ok = True )
-
+    
     for scale in RUN_SCALES:
         cfg = SCALES[scale]
         n, p, MR, outlier_threshold = cfg['n'], cfg['p'], cfg['MR'], cfg['outlier_threshold']
         print( f'\n########## {scale}-scale | n={n} p={p} MR={MR} outlier_threshold={outlier_threshold} ##########' )
-
+        
         # ---- 1. Synthetic detection ablation study + significance test ---- #
         if RUN_DETECTION:
             Sim.run_detection_simulation(
@@ -77,7 +77,7 @@ if __name__ == '__main__':
                 run_significance = False,
                 significance_baseline = 'Original',
             )
-
+        
         # ---- 2. Dimensionality-reduction screen comparison ---- #
         if RUN_REDUCTION:
             Sim.run_reduction_simulation(
@@ -88,7 +88,7 @@ if __name__ == '__main__':
                 simulations = SIMULATIONS,
                 seed = SEED,
             )
-
+    
     # ---- Coefficient sweep: Enhanced Corr vs Enhanced Eigvec, coef_min 0.0..1.0 ---- #
     if RUN_COEF_SWEEP:
         cfg = SCALES[COEF_SWEEP_SCALE]
@@ -107,7 +107,7 @@ if __name__ == '__main__':
             run_significance = False,
             csv_id = 'CoefSweep',
         )
-
+    
     # ---- 3. Real-world detection (pre-processed datasets) ---- #
     if RUN_REALWORLD:
         Sim.run_realworld_detection(
