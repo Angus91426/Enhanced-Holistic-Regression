@@ -16,7 +16,7 @@ run_realworld_detection  : detection on pre-processed real-world datasets
 import os, time, math, datetime
 
 import numpy as np, pandas as pd
-import Enhanced_Holistic_Regression as EHR
+import Scalable_Multicollinearity_Structure_Recovery as SMSR
 
 from scipy.stats import wilcoxon, ttest_rel
 from rich import print
@@ -325,7 +325,7 @@ def run_detection_simulation(
             print( f'Coef_min: {coef_min}, Data: {data_id + 1} / {simulations}' )
 
             # Generate simulation dataset.
-            original_col, coef_dict, X, feature_col = EHR.Simulation_Data( n, p, MR, noise_scale, data_seed, coef_min = coef_min )
+            original_col, coef_dict, X, feature_col = SMSR.Simulation_Data( n, p, MR, noise_scale, data_seed, coef_min = coef_min )
 
             # Show the true collinearity relationships.
             true_feat = []
@@ -352,7 +352,7 @@ def run_detection_simulation(
                 trace_path = os.path.join( OUTPUT_DIR, f'Coef_min_{coef_min}_Sim_{data_id + 1}_{label}_Trace.csv' ) if save_trace else None
 
                 # Fresh trace=[] per instantiation so each method records only its own events.
-                multi_ = EHR.Multicollinear( **flags, norm_threshold = norm_threshold, alpha = alpha,
+                multi_ = SMSR.Multicollinear( **flags, norm_threshold = norm_threshold, alpha = alpha,
                                              total_time_limit = total_time_limit, per_solve_time_limit = per_solve_time_limit,
                                              log_file = log_path, log_tag = log_tag, trace = [], trace_file = trace_path )
                 start = time.time()
@@ -384,7 +384,7 @@ def run_detection_simulation(
                 log_tag = f'sim {data_id + 1}/{simulations} | coef_min={coef_min} | Original'
                 # trace_file so Bertsimas_Minimum_Support records its MIPGap / solver time too.
                 trace_path = os.path.join( OUTPUT_DIR, f'Coef_min_{coef_min}_Sim_{data_id + 1}_Original_Trace.csv' ) if save_trace else None
-                multi_ = EHR.Multicollinear( norm_threshold = norm_threshold, alpha = alpha,
+                multi_ = SMSR.Multicollinear( norm_threshold = norm_threshold, alpha = alpha,
                                              total_time_limit = total_time_limit, per_solve_time_limit = per_solve_time_limit,
                                              log_file = log_path, log_tag = log_tag, trace = [], trace_file = trace_path )
                 start = time.time()
@@ -476,7 +476,7 @@ def run_reduction_simulation(
             print( '=.' * 50 )
             print( f'Coef_min: {coef_min}, Data: {data_id + 1} / {simulations}' )
 
-            original_col, coef_dict, X, feature_col = EHR.Simulation_Data( n, p, MR, noise_scale, data_seed, coef_min = coef_min )
+            original_col, coef_dict, X, feature_col = SMSR.Simulation_Data( n, p, MR, noise_scale, data_seed, coef_min = coef_min )
 
             true_feat = []
             for key, value in original_col.items():
@@ -485,7 +485,7 @@ def run_reduction_simulation(
                     true_feat += feat_
             print( f'Total number of features involved in multicollinearity: {len( true_feat )}' )
 
-            multi_ = EHR.Multicollinear( alpha = alpha )
+            multi_ = SMSR.Multicollinear( alpha = alpha )
 
             # Eigenvector screen.
             start_ = time.time()
@@ -573,7 +573,7 @@ def run_realworld_detection(
 
     def _detect( dName, X, feature_col, detector, trace_path ):
         """Run one detector, trace it, and return (z_pos, ineq_fail, irre_fail, time)."""
-        multi_ = EHR.Multicollinear( reduction = reduction, norm_threshold = norm_threshold, alpha = alpha,
+        multi_ = SMSR.Multicollinear( reduction = reduction, norm_threshold = norm_threshold, alpha = alpha,
                                         total_time_limit = total_time_limit, per_solve_time_limit = per_solve_time_limit,
                                         trace = [], trace_file = trace_path )
         start_ = time.time()
