@@ -19,11 +19,11 @@ At 10,000 predictors, SMR maintains 100% detection accuracy while reducing the f
 
 ```
 .
-├── SMR.py          # Core methodology (the Multicollinear class + data generation)
-├── Simulation.py    # Experiment drivers used in the manuscript
-├── main.py          # Entry point / configuration for reproducing experiments
-├── Data/            # Real-world datasets (_Raw and _Processed CSVs)
-└── Results/         # Output directory (will be created automatically after running the simulation)
+├── Scalable_Multicollinearity_Recovery.py          # Core methodology (the Multicollinear class + data generation)
+├── Simulation.py                                   # Experiment drivers used in the manuscript
+├── main.py                                         # Entry point / configuration for reproducing experiments
+├── Data/                                           # Real-world datasets (_Raw and _Processed CSVs)
+└── Results/                                        # Output directory (will be created automatically after running the simulation)
 ```
 
 ### `SMR.py`
