@@ -121,7 +121,7 @@ detector = SMR.Multicollinear(
     reduction=True, reduction_method='eigvec',
     Inequality_Inspection=True, Irreducibility_Inspection=True, fastpath=True
 )
-relationships = detector.Enhanced_Detection(X=X, col_names=feature_col)
+relationships = detector.SMR_Main(X=X, col_names=feature_col)
 acc, fpr = detector.Multicollinear_score(relationships, indices)
 print(f'Accuracy: {acc:.1f}%, False-positive rate: {fpr:.1f}%')
 ```
