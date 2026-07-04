@@ -1,32 +1,32 @@
-# Enhanced Holistic Regression
+# Scalable Multicollinearity Structure Recovery
 
-Reference implementation and experiments for the paper **"Enhanced Holistic Regression for Multicollinearity Detection and Feature Selection"** (Chih-Hua Hsu and Ting-Yu Liao, Department of Industrial and Systems Engineering, Chung Yuan Christian University).
+Reference implementation and experiments for the paper **"Scalable Multicollinearity Structure Recovery via Mixed-Integer Optimization"** (Chih-Hua Hsu and Ting-Yu Liao, Department of Industrial and Systems Engineering, Chung Yuan Christian University).
 
-Enhanced Holistic Regression (EHR) is a framework for detecting multicollinear relationships in high-dimensional linear regression. It builds on the mixed-integer quadratic optimization of Bertsimas and Li (2020) but differs in formulation, scalability, and theoretical grounding. EHR adds a correlation-based screen and a parameter-free eigenvector screen, recasts the minimum-support program with a Special Ordered Set (SOS-1) constraint and a closed-form verification step, and introduces an irreducibility test and a residual-guided fast-path completion. Together, these reduce false positives and allow detection to scale from 1,000 to 10,000 predictors.
+Scalable Multicollinearity Structure Recovery (SMSR) is a framework for detecting multicollinear relationships in high-dimensional linear regression. It builds on the mixed-integer quadratic optimization of Bertsimas and Li (2020) but differs in formulation, scalability, and theoretical grounding. SMSR adds a correlation-based screen and a parameter-free eigenvector screen, recasts the minimum-support program with a Special Ordered Set (SOS-1) constraint and a closed-form verification step, and introduces an irreducibility test and a residual-guided fast-path completion. Together, these reduce false positives and allow detection to scale from 1,000 to 10,000 predictors.
 
 ## Method overview
 
-Given a normalized design matrix `X`, EHR searches for minimal groups of columns that are (near-)linearly dependent. The pipeline has four stages:
+Given a normalized design matrix `X`, SMSR searches for minimal groups of columns that are (near-)linearly dependent. The pipeline has four stages:
 
 1. **Dimensionality-reduction screen** — narrows the search to features likely to be involved in a multicollinear relationship, using either a correlation screen (`Corr_Dimensionality_Reduction`, z-score threshold on each column's strongest off-diagonal correlation) or a parameter-free eigenvector screen (`Eigvec_Dimensionality_Reduction`, features that load significantly on small-eigenvalue eigenvectors).
 2. **Minimum-support detection** — a mixed-integer program (`Minimum_Support`) finds the smallest set of columns spanned by the small-eigenvalue subspace, using an SOS-1 constraint to link the binary support to the coefficient vector. The original Bertsimas big-M formulation is retained as `Bertsimas_Minimum_Support` for comparison.
 3. **Verification** — each candidate support is confirmed by a closed-form *inequality inspection* (smallest eigenvalue below a norm threshold) and an *irreducibility inspection* (no proper subset is already collinear).
 4. **Fast-path completion** — when a candidate fails the inequality check, a residual-guided greedy step (`_fast_path`) attempts to recover a genuine relationship instead of discarding it.
 
-At 10,000 predictors, the enhanced procedure maintains 100% detection accuracy while reducing the false-positive rate from about 33% to 9% and runtime from roughly 6,000 seconds to under 200 seconds.
+At 10,000 predictors, SMSR maintains 100% detection accuracy while reducing the false-positive rate from about 33% to 9% and runtime from roughly 6,000 seconds to under 200 seconds.
 
 ## Repository structure
 
 ```
 .
-├── Enhanced_Holistic_Regression.py   # Core methodology (the Multicollinear class + data generation)
-├── Simulation.py                     # Experiment drivers used in the manuscript
-├── main.py                           # Entry point / configuration for reproducing experiments
-├── Data/                             # Real-world datasets (_Raw and _Processed CSVs)
-└── Results/                          # Output directory (will be created automatically after running the simulation)
+├── SMSR.py          # Core methodology (the Multicollinear class + data generation)
+├── Simulation.py    # Experiment drivers used in the manuscript
+├── main.py          # Entry point / configuration for reproducing experiments
+├── Data/            # Real-world datasets (_Raw and _Processed CSVs)
+└── Results/         # Output directory (will be created automatically after running the simulation)
 ```
 
-### `Enhanced_Holistic_Regression.py`
+### `SMSR.py`
 
 Core implementation. Key components:
 
@@ -110,14 +110,14 @@ Shared settings such as `NOISE_SCALE`, `SIMULATIONS`, and `SEED` are also define
 
 ```python
 import numpy as np
-import Enhanced_Holistic_Regression as EHR
+import SMSR
 
 # Synthetic example: 2000 x 1000 design with planted relationships
-indices, coef, X, feature_col = EHR.Simulation_Data(
+indices, coef, X, feature_col = SMSR.Simulation_Data(
     n=2000, p=1000, MR=[0, 5, 3, 1, 1, 0, 0], noise_scale=0.01, rand_seed=911122
 )
 
-detector = EHR.Multicollinear(
+detector = SMSR.Multicollinear(
     reduction=True, reduction_method='eigvec',
     Inequality_Inspection=True, Irreducibility_Inspection=True, fastpath=True
 )
@@ -130,7 +130,7 @@ print(f'Accuracy: {acc:.1f}%, False-positive rate: {fpr:.1f}%')
 
 If you use this code, please cite:
 
-> Chih-Hua Hsu and Ting-Yu Liao. *Enhanced Holistic Regression for Multicollinearity Detection and Feature Selection.*
+> Chih-Hua Hsu and Ting-Yu Liao. *Scalable Multicollinearity Structure Recovery via Mixed-Integer Optimization.*
 
 The method builds on:
 
