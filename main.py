@@ -72,7 +72,7 @@ if __name__ == '__main__':
                 seed = SEED,
                 outlier_threshold = outlier_threshold,
                 run_A = False, run_B = False, run_C = False, run_D = False, run_E = False,
-                run_Enhanced_Corr = False, run_Enhanced_Eigen = True, run_Bertsimas = False,
+                run_SMR_Corr = False, run_SMR_Eigen = True, run_Bertsimas = False,
                 save_trace = SAVE_TRACE,
                 run_significance = False,
                 significance_baseline = 'Original',
@@ -89,7 +89,7 @@ if __name__ == '__main__':
                 seed = SEED,
             )
     
-    # ---- Coefficient sweep: Enhanced Corr vs Enhanced Eigvec, coef_min 0.0..1.0 ---- #
+    # ---- Coefficient sweep: SMR-Corr vs SMR-Eigvec, coef_min 0.0..1.0 ---- #
     if RUN_COEF_SWEEP:
         cfg = SCALES[COEF_SWEEP_SCALE]
         print( f'\n########## coef-sweep | {COEF_SWEEP_SCALE}-scale | coef_min={COEF_SWEEP_MINS} ##########' )
@@ -102,7 +102,7 @@ if __name__ == '__main__':
             seed = SEED,
             outlier_threshold = cfg['outlier_threshold'],
             run_A = False, run_B = False, run_C = False, run_D = False, run_E = False,
-            run_Enhanced_Corr = True, run_Enhanced_Eigen = True, run_Bertsimas = False,
+            run_SMR_Corr = True, run_SMR_Eigen = True, run_Bertsimas = False,
             save_trace = SAVE_TRACE,
             run_significance = False,
             csv_id = 'CoefSweep',
@@ -114,7 +114,7 @@ if __name__ == '__main__':
             BASE_DIR = BASE_DIR,
             data_dir = DATA_DIR,
             datasets = None,              # None => every *_Processed.csv in DATA_DIR
-            run_enhanced = True,
+            run_SMR = True,
             run_bertsimas = True,
             reduction = False,
             total_time_limit = 86400,
