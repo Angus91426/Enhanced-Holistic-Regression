@@ -44,15 +44,15 @@ Experiment drivers that call the core methods and write results:
 
 #### Ablation Study
 
-| Method     | Screen  | Inequality Inspection | Irreducibility Inspection | Fast-path recovery |
-|------------|---------|:---------------------:|:-------------------------:|:-------------------:|
-| A          | Corr    | –                     | –                         | –                   |
-| B          | Eigvec  | –                     | –                         | –                   |
-| C          | –       | ✓                     | –                         | –                   |
-| D          | –       | ✓                     | ✓                         | –                   |
-| E          | Corr    | ✓                     | ✓                         | –                   |
-| SMSR-Corr  | Corr    | ✓                     | ✓                         | ✓                   |
-| SMSR       | Eigvec  | ✓                     | ✓                         | ✓                   |
+| Method      | Screen  | Inequality Inspection | Irreducibility Inspection | Fast-path recovery |
+|-------------|---------|:---------------------:|:-------------------------:|:-------------------:|
+| A           | Corr    | –                     | –                         | –                   |
+| B           | Eigvec  | –                     | –                         | –                   |
+| C           | –       | ✓                     | –                         | –                   |
+| D           | –       | ✓                     | ✓                         | –                   |
+| E           | Corr    | ✓                     | ✓                         | –                   |
+| SMSR-Corr   | Corr    | ✓                     | ✓                         | ✓                   |
+| SMSR-Eigvec | Eigvec  | ✓                     | ✓                         | ✓                   |
 
 ### `main.py`
 
