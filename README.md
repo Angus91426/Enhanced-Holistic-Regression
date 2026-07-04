@@ -110,7 +110,7 @@ Shared settings such as `NOISE_SCALE`, `SIMULATIONS`, and `SEED` are also define
 
 ```python
 import numpy as np
-import SMR
+import Scalable_Multicollinearity_Recovery.py as SMR
 
 # Synthetic example: 2000 x 1000 design with planted relationships
 indices, coef, X, feature_col = SMR.Simulation_Data(
