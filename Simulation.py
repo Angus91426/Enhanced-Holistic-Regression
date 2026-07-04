@@ -5,18 +5,18 @@ Simulation.py
 Functions
 ---------
 run_detection_simulation : synthetic multicollinearity-detection ablation study
-                            (Methods A-E, Enhanced, Bertsimas) plus the paired
+                            (Methods A-E, SMR, Bertsimas) plus the paired
                             significance tests on the produced Performance table.
 run_reduction_simulation : dimensionality-reduction screen comparison
                             (Eigvec vs Corr at several outlier thresholds).
 run_realworld_detection  : detection on pre-processed real-world datasets
-                            (Enhanced and/or Bertsimas).
+                            (SMR and/or Bertsimas).
 """
 
 import os, time, math, datetime
 
 import numpy as np, pandas as pd
-import Scalable_Multicollinearity_Structure_Recovery as SMSR
+import Scalable_Multicollinearity_Recovery as SMR
 
 from scipy.stats import wilcoxon, ttest_rel
 from rich import print
@@ -211,7 +211,7 @@ def run_detection_simulation(
     total_time_limit: int = None,
     per_solve_time_limit: int = None,
     run_A: bool = True, run_B: bool = True, run_C: bool = True, run_D: bool = True, run_E: bool = True,
-    run_SMSR_Corr: bool = True, run_SMSR_Eigen: bool = True, run_Bertsimas: bool = True,
+    run_SMR_Corr: bool = True, run_SMR_Eigen: bool = True, run_Bertsimas: bool = True,
     save_relationship: bool = True,
     save_trace: bool = False,
     run_significance: bool = True,
@@ -295,11 +295,11 @@ def run_detection_simulation(
             'reduction': True,  'reduction_method': 'corr', 'outlier_threshold': outlier_threshold,
             'Inequality_Inspection': True,  'Irreducibility_Inspection': True,  'fastpath': False } },
         
-        { 'label': 'SMSR-Corr', 'enabled': run_SMSR_Corr, 'flags': {
+        { 'label': 'SMR-Corr', 'enabled': run_SMR_Corr, 'flags': {
             'reduction': True,  'reduction_method': 'corr', 'outlier_threshold': outlier_threshold,
             'Inequality_Inspection': True,  'Irreducibility_Inspection': True,  'fastpath': True } },
         
-        { 'label': 'SMSR-Eigen', 'enabled': run_SMSR_Eigen, 'flags': {
+        { 'label': 'SMR-Eigen', 'enabled': run_SMR_Eigen, 'flags': {
             'reduction': True,  'reduction_method': 'eigvec',
             'Inequality_Inspection': True,  'Irreducibility_Inspection': True,  'fastpath': True } },
     ]
@@ -330,7 +330,7 @@ def run_detection_simulation(
             print( f'Coef_min: {coef_min}, Data: {data_id + 1} / {simulations}' )
             
             # Generate simulation dataset.
-            original_col, coef_dict, X, feature_col = SMSR.Simulation_Data( n, p, MR, noise_scale, data_seed, coef_min = coef_min )
+            original_col, coef_dict, X, feature_col = SMR.Simulation_Data( n, p, MR, noise_scale, data_seed, coef_min = coef_min )
             
             # Show the true collinearity relationships.
             true_feat = []
@@ -357,7 +357,7 @@ def run_detection_simulation(
                 trace_path = os.path.join( OUTPUT_DIR, f'Coef_min_{coef_min}_Sim_{data_id + 1}_{label}_Trace.csv' ) if save_trace else None
                 
                 # Fresh trace=[] per instantiation so each method records only its own events.
-                multi_ = SMSR.Multicollinear( **flags, norm_threshold = norm_threshold, alpha = alpha,
+                multi_ = SMR.Multicollinear( **flags, norm_threshold = norm_threshold, alpha = alpha,
                                                 total_time_limit = total_time_limit, per_solve_time_limit = per_solve_time_limit,
                                                 log_file = log_path, log_tag = log_tag, trace = [], trace_file = trace_path )
                 start = time.time()
@@ -389,7 +389,7 @@ def run_detection_simulation(
                 log_tag = f'sim {data_id + 1}/{simulations} | coef_min={coef_min} | Original'
                 # trace_file so Bertsimas_Minimum_Support records its MIPGap / solver time too.
                 trace_path = os.path.join( OUTPUT_DIR, f'Coef_min_{coef_min}_Sim_{data_id + 1}_Original_Trace.csv' ) if save_trace else None
-                multi_ = SMSR.Multicollinear( norm_threshold = norm_threshold, alpha = alpha,
+                multi_ = SMR.Multicollinear( norm_threshold = norm_threshold, alpha = alpha,
                                                 total_time_limit = total_time_limit, per_solve_time_limit = per_solve_time_limit,
                                                 log_file = log_path, log_tag = log_tag, trace = [], trace_file = trace_path )
                 start = time.time()
@@ -480,7 +480,7 @@ def run_reduction_simulation(
             print( '=.' * 50 )
             print( f'Coef_min: {coef_min}, Data: {data_id + 1} / {simulations}' )
             
-            original_col, coef_dict, X, feature_col = SMSR.Simulation_Data( n, p, MR, noise_scale, data_seed, coef_min = coef_min )
+            original_col, coef_dict, X, feature_col = SMR.Simulation_Data( n, p, MR, noise_scale, data_seed, coef_min = coef_min )
             
             true_feat = []
             for key, value in original_col.items():
@@ -489,7 +489,7 @@ def run_reduction_simulation(
                     true_feat += feat_
             print( f'Total number of features involved in multicollinearity: {len( true_feat )}' )
             
-            multi_ = SMSR.Multicollinear()
+            multi_ = SMR.Multicollinear()
             
             # Eigenvector screen.
             start_ = time.time()
@@ -527,7 +527,7 @@ def run_realworld_detection(
     BASE_DIR: str,
     data_dir: str,
     datasets = None,
-    run_SMSR: bool = True,
+    run_SMR: bool = True,
     run_bertsimas: bool = True,
     reduction: bool = False,
     norm_threshold: float = 10 ** ( -2 ),
@@ -553,8 +553,8 @@ def run_realworld_detection(
     datasets : list of str or None
         Dataset base names (without the ``_Processed.csv`` suffix). None runs
         every processed dataset found in ``data_dir``.
-    run_SMSR, run_bertsimas : bool
-        Enable SMSR_Detection and/or Bertsimas_Detection.
+    run_SMR, run_bertsimas : bool
+        Enable SMR_Detection and/or Bertsimas_Detection.
     reduction : bool
         Enable the dimensionality-reduction screen inside Enhanced_Detection.
     norm_threshold, alpha : float
@@ -577,12 +577,12 @@ def run_realworld_detection(
     
     def _detect( X, feature_col, detector, trace_path ):
         """Run one detector, trace it, and return (z_pos, ineq_fail, irre_fail, time)."""
-        multi_ = SMSR.Multicollinear( reduction = reduction, norm_threshold = norm_threshold, alpha = alpha,
+        multi_ = SMR.Multicollinear( reduction = reduction, norm_threshold = norm_threshold, alpha = alpha,
                                         total_time_limit = total_time_limit, per_solve_time_limit = per_solve_time_limit,
                                         trace = [], trace_file = trace_path )
         start_ = time.time()
-        if detector == 'SMSR_Detection':
-            z_pos = multi_.SMSR_Main( X = X, col_names = feature_col )
+        if detector == 'SMR_Detection':
+            z_pos = multi_.SMR_Main( X = X, col_names = feature_col )
         else:
             z_pos = multi_.Bertsimas_Detection( X = X, col_names = feature_col )
         elapsed = time.time() - start_
@@ -605,7 +605,7 @@ def run_realworld_detection(
         X = data.values
         
         detectors = []
-        if run_SMSR:  detectors.append( ( 'SMSR_Detection', f'{dName}_Detected.csv' ) )
+        if run_SMR:  detectors.append( ( 'SMR_Detection', f'{dName}_Detected.csv' ) )
         if run_bertsimas: detectors.append( ( 'Bertsimas_Detection', f'{dName}_Detected_Bertsimas.csv' ) )
         
         for detector, trace_name in detectors:
