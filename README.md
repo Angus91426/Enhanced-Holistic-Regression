@@ -26,7 +26,7 @@ At 10,000 predictors, SMR maintains 100% detection accuracy while reducing the f
 └── Results/                                   # Output directory (will be created automatically after running the simulation)
 ```
 
-### `SMR.py`
+### `Scalable_Multicollinearity_Recovery.py`
 
 Core implementation. Key components:
 
