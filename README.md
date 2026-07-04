@@ -130,7 +130,7 @@ print(f'Accuracy: {acc:.1f}%, False-positive rate: {fpr:.1f}%')
 
 If you use this code, please cite:
 
-> Chih-Hua Hsu and Ting-Yu Liao. *Scalable Multicollinearity Structure Recovery via Mixed-Integer Optimization.*
+> Chih-Hua Hsu and Ting-Yu Liao. *Scalable Multicollinearity Recovery via Mixed-Integer Optimization.*
 
 The method builds on:
 
