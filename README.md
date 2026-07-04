@@ -51,8 +51,8 @@ Experiment drivers that call the core methods and write results:
 | C          | –       | ✓                     | –                         | –                   |
 | D          | –       | ✓                     | ✓                         | –                   |
 | E          | Corr    | ✓                     | ✓                         | –                   |
-| En-Corr    | Corr    | ✓                     | ✓                         | ✓                   |
-| En-Eigvec  | Eigvec  | ✓                     | ✓                         | ✓                   |
+| SMSR-Corr  | Corr    | ✓                     | ✓                         | ✓                   |
+| SMSR       | Eigvec  | ✓                     | ✓                         | ✓                   |
 
 ### `main.py`
 
