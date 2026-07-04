@@ -32,7 +32,7 @@ Core implementation. Key components:
 
 - `Simulation_Data(...)` — generates synthetic design matrices with planted multicollinear relationships of sizes 2, 3, 4, 8, 10, 15, and 20 features.
 - `Data_Preprocessing(...)`, `Normalize(...)`, `Drop_Perfect(...)` — helpers for preparing real-world data (one-hot encoding, column normalization, removal of perfectly collinear columns).
-- `Multicollinear` — the main class. It bundles the two screens, the minimum-support solvers (`Minimum_Support`, `Bertsimas_Minimum_Support`), the verification steps (`Inspection`, `_inequality_inspection`, `_irreducibility_inspection`), the fast-path (`_fast_path`), and the top-level detectors `Enhanced_Detection` / `Ablation_Detection` and `Bertsimas_Detection`. The scoring utilities `Multicollinear_score` and `Reduction_score` report the accuracy and false-positive rate.
+- `Multicollinear` — the main class. It bundles the two screens (`Corr_Dimensionality_Reduction`, `Eigvec_Dimensionality_Reduction`), the minimum-support solvers (`Minimum_Support`, `Bertsimas_Minimum_Support`), the verification steps (`Inspection`, `_inequality_inspection`, `_irreducibility_inspection`), the fast-path (`_fast_path`), and the top-level detectors `Enhanced_Detection` / `Ablation_Detection` and `Bertsimas_Detection`. The scoring utilities `Multicollinear_score` and `Reduction_score` report the accuracy and false-positive rate.
 
 ### `Simulation.py`
 
