@@ -38,9 +38,9 @@ Core implementation. Key components:
 
 Experiment drivers that call the core methods and write results:
 
-- `run_detection_simulation(...)` — synthetic ablation study. Runs Methods A–E, Enhanced (Corr and Eigen variants), and the Bertsimas/Original baseline on generated datasets, then runs paired Wilcoxon / t-tests. The seven configurations isolate one component at a time (screen, inequality inspection, irreducibility, fast-path).
+- `run_detection_simulation(...)` — synthetic ablation study. Runs Methods A–E, SMSR (Corr and Eigen variants), and the Bertsimas/Original baseline on generated datasets, then runs paired Wilcoxon / t-tests. The seven configurations isolate one component at a time (screen, inequality inspection, irreducibility inspection, fast-path recovery).
 - `run_reduction_simulation(...)` — compares the eigenvector screen against the correlation screen at several z thresholds.
-- `run_realworld_detection(...)` — runs Enhanced and/or Bertsimas detection on the pre-processed real-world datasets.
+- `run_realworld_detection(...)` — runs SMSR and/or Bertsimas detection on the pre-processed real-world datasets.
 
 #### Ablation Study
 
