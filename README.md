@@ -2,7 +2,7 @@
 
 Reference implementation and experiments for the paper **"Scalable Multicollinearity Structure Recovery via Mixed-Integer Optimization"** (Chih-Hua Hsu and Ting-Yu Liao, Department of Industrial and Systems Engineering, Chung Yuan Christian University).
 
-Scalable Multicollinearity Structure Recovery (SMSR) is a framework for detecting multicollinear relationships in high-dimensional linear regression. It builds on the mixed-integer quadratic optimization of Bertsimas and Li (2020) but differs in formulation, scalability, and theoretical grounding. SMSR adds a correlation-based screen and a parameter-free eigenvector screen, recasts the minimum-support program with a Special Ordered Set (SOS-1) constraint and a closed-form verification step, and introduces an irreducibility test and a residual-guided fast-path completion. Together, these reduce false positives and allow detection to scale from 1,000 to 10,000 predictors.
+Scalable Multicollinearity Structure Recovery (SMSR) is a framework for detecting multicollinear relationships. It builds on the mixed-integer quadratic optimization of Bertsimas and Li (2020) but differs in formulation, scalability, and theoretical grounding. SMSR adds a correlation-based screen and a parameter-free eigenvector screen, recasts the minimum-support program with a Special Ordered Set (SOS-1) constraint and a closed-form verification step, and introduces an irreducibility test and a residual-guided fast-path completion. Together, these reduce false positives and allow detection to scale from 1,000 to 10,000 predictors.
 
 ## Method overview
 
