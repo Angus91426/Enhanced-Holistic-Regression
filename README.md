@@ -9,7 +9,7 @@ Scalable Multicollinearity Structure Recovery (SMSR) is a framework for detectin
 Given a normalized design matrix `X`, SMSR searches for minimal groups of columns that are (near-)linearly dependent. The pipeline has four stages:
 
 1. **Dimensionality-reduction screen** — narrows the search to features likely to be involved in a multicollinear relationship, using either a correlation screen (`Corr_Dimensionality_Reduction`, z-score threshold on each column's strongest off-diagonal correlation) or a parameter-free eigenvector screen (`Eigvec_Dimensionality_Reduction`, features that load significantly on small-eigenvalue eigenvectors).
-2. **Minimum-support detection** — a mixed-integer program (`Minimum_Support`) finds the smallest set of columns spanned by the small-eigenvalue subspace, using an SOS-1 constraint to link the binary support to the coefficient vector. The original Bertsimas big-M formulation is retained as `Bertsimas_Minimum_Support` for comparison.
+2. **Minimum-support detection** — a mixed-integer program (`Minimum_Support`) finds the smallest set of columns spanned by the eigenvectors' subspace, using an SOS-1 constraint to link the binary support to the coefficient vector. The original Bertsimas big-M formulation is retained as `Bertsimas_Minimum_Support` for comparison.
 3. **Verification** — each candidate support is confirmed by a closed-form `_inequality_inspection` (smallest eigenvalue below a norm threshold) and an `_irreducibility_inspection` (no proper subset is already collinear).
 4. **Fast-path completion** — when a candidate fails the inequality check, a residual-guided greedy step (`_fast_path`) attempts to recover a genuine relationship instead of discarding it.
 
