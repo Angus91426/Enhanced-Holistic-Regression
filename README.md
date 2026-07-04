@@ -51,8 +51,8 @@ Experiment drivers that call the core methods and write results:
 | C           | –       | ✓                     | –                         | –                   |
 | D           | –       | ✓                     | ✓                         | –                   |
 | E           | Corr    | ✓                     | ✓                         | –                   |
-| SMR-Corr   | Corr    | ✓                     | ✓                         | ✓                   |
-| SMR-Eigvec | Eigvec  | ✓                     | ✓                         | ✓                   |
+| SMR-Corr    | Corr    | ✓                     | ✓                         | ✓                   |
+| SMR-Eigvec  | Eigvec  | ✓                     | ✓                         | ✓                   |
 
 ### `main.py`
 
@@ -102,7 +102,7 @@ Open `main.py` and set the flags for the experiments you want:
 - `RUN_DETECTION` — synthetic ablation study plus significance tests.
 - `RUN_REDUCTION` — eigenvector vs. correlation screen comparison.
 - `RUN_REALWORLD` — detection on the datasets in `Data/`.
-- `RUN_COEF_SWEEP` — Enhanced Corr vs. Enhanced Eigvec across minimum-coefficient levels 0.0–1.0.
+- `RUN_COEF_SWEEP` — SMR-Corr vs. SMR-Eigvec across minimum-coefficient levels 0.0–1.0.
 
 Shared settings such as `NOISE_SCALE`, `SIMULATIONS`, and `SEED` are also defined at the top of `main.py`. Results are written under `Results/` (created automatically), organized into `Detection/`, `Reduction/`, and `RealWorld/` subfolders with performance tables (`Performance.xlsx`), detected/ground-truth workbooks, and, when enabled, per-simulation trace CSVs.
 
